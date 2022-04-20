@@ -45,28 +45,33 @@ class FirstParsingInfoTag:
         self._equip_tag = equip_info_tag
         self._title = self._equip_title()
         self._category = self._eqiup_category()
-        self._stats_dict = self._equip_stats_dict()
+        self._stats_dict = self._equip_stats_tag_dict()
 
     def _equip_title(self):
         title_tag = self._equip_tag.select_one(".item_title h1")
-        title_tag.extract("em")
+        title_tag.select_one("em").extract()
         title_text = title_tag.text
+        title_text = title_text.replace("\n", "")
+        title_text = title_text.replace(u"\xa0", "")
+        title_text = title_text.strip()
         return title_text
 
     def _eqiup_category(self):
-        category_tag = self._equip_tag.select_one(".item_ability > div:nth-child(3) > span").extract("em")
+        category_tag = self._equip_tag.select_one(".item_ability > div:nth-child(3) > span > em")
         category_text = category_tag.text
         return category_text
 
-    def _equip_stats_dict(self):
+    def _equip_stats_tag_dict(self):
         """return bs4.element.ResultSet
         [0] : STR, [1]: DEX, [2] : INT, [3] : LUK, [4] : MaxHP, [5] : 공격력, [6] : 물리방어력"""
         stet_tag_set = self._equip_tag.select(".stet_info > ul > li")
         stats_dict = {}
         for li_tag in stet_tag_set:
             attr = li_tag.select_one(".stet_th span").text
-            value = li_tag.select_one(".point_td").text
-            stats_dict[attr] = value
+            attr = attr.replace("\n", "")
+            attr = attr.strip()
+            value_tag = li_tag.select_one(".point_td")
+            stats_dict[attr] = value_tag
         return stats_dict
 
     @property
@@ -95,9 +100,18 @@ my_url = "https://maplestory.nexon.com/Common/Character/Detail/%ed%9e%88%ec%8a%8
       "kg56a2qImGHSENhY4orAkJSLirlbSciSAERq3rRq3FtpAqMU%2bqxT7bVxfZCeH0ph%2fdvyNYQdFxnobclv5nlxmE%3d"
 
 hishuwa = EquipInfoTag(my_url)
-item_soup = hishuwa.get_equip_info_tag(1)
-print(type(item_soup))
+item_soup_ring = hishuwa.get_equip_info_tag(1)
 hishuwa.browser_quit()
+lightly_parsed = FirstParsingInfoTag(item_soup_ring)
+print("TITLE")
+print(lightly_parsed.title)
+print()
+print("CATEGORY")
+print(lightly_parsed.category)
+print()
+print("STAT_DICT")
+print(lightly_parsed.stat_dict)
+
 # import bs4
 # help(bs4.element.Tag)
 # help(bs4.element.ResultSet)
