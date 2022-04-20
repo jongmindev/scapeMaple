@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,pycharm,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,pycharm,python
+# Created by https://www.toptal.com/developers/gitignore/api/windows,python,pycharm
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,python,pycharm
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -291,4 +291,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,pycharm,python
+# End of https://www.toptal.com/developers/gitignore/api/windows,python,pycharm
