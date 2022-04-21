@@ -1,9 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
-from bs4 import Tag
+from bs4.element import Tag
 import re
-# from copy import copy
 
 
 class EquipInfoTag:
@@ -89,6 +88,9 @@ class FirstParsingInfoTag:
 
 
 class SecondParsingInfoTag:
+    """
+    name, scroll, category, stats_dict, potential, additional, starforce, superior, (amazing,) hammer
+    """
     def __init__(self, first: FirstParsingInfoTag):
         self._first = first
         self._name = self._set_title()
@@ -100,6 +102,7 @@ class SecondParsingInfoTag:
         starforce_tuple = self._set_starforce()
         self._starforce_max = starforce_tuple[0]
         self._starforce_now = starforce_tuple[1]
+        self._superior = self._set_superior()
         self._hammer = self._set_hammer()
 
     def _set_title(self) -> str:
@@ -195,6 +198,15 @@ class SecondParsingInfoTag:
             raise ValueError("Wrong starforce parsing.")
         return star_values
 
+    def _set_superior(self) -> bool:
+        """first.stats_dict -> whether to be superior item"""
+        etc_list = self._etc_to_list()
+        superior = False
+        for text in etc_list:
+            if text.__contains__("슈페리얼"):
+                superior = True
+        return superior
+
     def _set_hammer(self) -> bool:
         """first.stats_dict -> whether to use hammer"""
         etc_list = self._etc_to_list()
@@ -208,6 +220,46 @@ class SecondParsingInfoTag:
     def _type_checker(checked, type_restraint: object):
         if type(checked) != type_restraint:
             raise TypeError(f"{checked} : Wrong type. Should be {type_restraint}, but it is {type(type_restraint)}.")
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def scroll(self):
+        return self._scroll
+
+    @property
+    def category(self):
+        return self._category
+
+    @property
+    def stats_dict(self):
+        return self.stats_dict
+
+    @property
+    def potential(self):
+        return self._potential
+
+    @property
+    def additional(self):
+        return self._additional
+
+    @property
+    def starforce_max(self):
+        return self._starforce_max
+
+    @property
+    def starforce_now(self):
+        return self._starforce_now
+
+    @property
+    def superior(self):
+        return self._superior
+
+    @property
+    def hammer(self):
+        return self._hammer
 
 
 if __name__ == "__main__":
