@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+import requests
 
 
 EQUIPMENT_INDEX = {'반지1': 1, '모자': 3, '엠블렘': 5,
@@ -12,11 +13,23 @@ EQUIPMENT_INDEX = {'반지1': 1, '모자': 3, '엠블렘': 5,
                    '신발': 28, '암드로이드': 29, '기계심장': 30}
 
 
+def is_maintenance_in_progress(url):
+    html = requests.get(url)
+    soup = BeautifulSoup(html.content, 'html.parser')
+    maintenance = soup.select_one("#container [alt='메이플스토리 게임 점검 중에는 이용하실 수 없습니다.']") is not None
+    if maintenance:
+        raise RuntimeError("메이플스토리 게임 점검 중")
+
+
 class BrowserForEquipmentTag:
-    def __init__(self, url: str):
-        # 캐릭터 정보창 url 을 입력받아 브라우저 실행
+    def __init__(self, url: str, background: bool = True):
+        # chrome browser 를 열지 않고 background 에서 실행
+        if background:
+            webdriver.ChromeOptions().add_argument("headless")
+        # 캐릭터정보/장비탭 url 을 입력받아 브라우저 실행
         self._browser = webdriver.Chrome()
         self._browser.get(url)
+
 
     def _get_equipment_webelement(self, item: str | int):
         """장비 부위 이름 str 또는 li:(n)th-child int n을 받아서 해당 장비 WebElement 반환"""
