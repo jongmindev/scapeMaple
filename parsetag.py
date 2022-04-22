@@ -30,7 +30,6 @@ class BrowserForEquipmentTag:
         self._browser = webdriver.Chrome()
         self._browser.get(url)
 
-
     def _get_equipment_webelement(self, item: str | int):
         """장비 부위 이름 str 또는 li:(n)th-child int n을 받아서 해당 장비 WebElement 반환"""
         if type(item) == int:

@@ -1,4 +1,4 @@
-from parsetag import BrowserForEquipmentTag, ParseInfoTag
+from parsetag import ParseInfoTag
 from bs4.element import Tag
 import re
 
@@ -257,58 +257,20 @@ class TrimmedInformation(EquipmentInformation):
     def additional_options(self):
         return self._additional_options
 
-
-# class MyEquipment:
-#     def __init__(self):
-#         pass
-#
-#     def _whether_to_equip(self) -> bool:
-#         pass
-
-
-if __name__ == "__main__":
-    # import geturl
-    # my_url = geturl.GetDetailEquipmentUrl("히슈와").equipment_url
-    # open_browser = BrowserForEquipmentTag(url=my_url)
-    # item_tag = open_browser.get_equipment_info_tag(22)
-    # open_browser.quit_browser()
-    # item_parsed_tag = ParseInfoTag(item_tag)
-    # item_second_step = EquipmentInformation(item_parsed_tag)
-    # # item_information = equipment.EquipmentInformation
-    #
-    # print("name__", item_second_step.name)
-    # print("scroll", item_second_step.scroll)
-    # print("cate__", item_second_step.category)
-    # print("stat__", item_second_step.stats_dict)
-    # print("poten_", item_second_step.potential)
-    # print("addi__", item_second_step.additional)
-    # print("star_m", item_second_step.starforce_max)
-    # print("star_n", item_second_step.starforce_now)
-    # print("superi", item_second_step.superior)
-    # print("amazin", item_second_step.amazing)
-    # print("hammer", item_second_step.hammer)
-
-    import geturl
-    my_url = geturl.GetDetailEquipmentUrl("히슈와").equipment_url
-    open_browser = BrowserForEquipmentTag(url=my_url)
-    item_info_tag = open_browser.get_equipment_info_tag('반지1')
-    open_browser.quit_browser()
-
-    information = TrimmedInformation(item_info_tag)
-
-    print("name__", information.name)
-    print("scroll", information.scroll)
-    print("cate__", information.category)
-    # print("stat__", information.stats_dict)
-    print("t_stat", information.stat_options)
-    # print("poten_", information.potential)
-    print("potier", information.potential_tier)
-    print("pot_op", information.potential_options)
-    # print("addi__", information.additional)
-    print("adtier", information.additional_tier)
-    print("add_op", information.additional_options)
-    print("star_m", information.starforce_max)
-    print("star_n", information.starforce_now)
-    print("superi", information.superior)
-    print("amazin", information.amazing)
-    print("hammer", information.hammer)
+    def print_all_attribute(self):
+        print("name__", self.name)
+        print("scroll", self.scroll)
+        print("cate__", self.category)
+        # print("stat__", self.stats_dict)
+        print("t_stat", self.stat_options)
+        # print("poten_", self.potential)
+        print("potier", self.potential_tier)
+        print("pot_op", self.potential_options)
+        # print("addi__", self.additional)
+        print("adtier", self.additional_tier)
+        print("add_op", self.additional_options)
+        print("star_m", self.starforce_max)
+        print("star_n", self.starforce_now)
+        print("superi", self.superior)
+        print("amazin", self.amazing)
+        print("hammer", self.hammer)

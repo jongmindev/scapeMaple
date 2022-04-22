@@ -28,5 +28,5 @@ if __name__ == "__main__":
     my_equipments = ItemScouter("로하예", background=False)
     for key, value in my_equipments.equipments_info_dict.items():
         print("<<< " + key + " >>>")
-        equipment.print_all_attribute(value)
+        value.print_all_attribute()
         print()
