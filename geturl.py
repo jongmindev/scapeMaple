@@ -9,6 +9,18 @@ class GetCharacterDetailUrl:
     RANKING_URL = MAIN_URL + "/Ranking/World/Total"
 
     def __init__(self, nickname: str):
+        """
+        해당 nickname 의 캐릭터 정보 page 의 url 을 get.
+
+        각 캐릭터의 정보 page url 에 뚜렷한 규칙이 보이지 않고, 심지어 주기적으로 변경되는 듯 함.
+        따라서 매번 랭킹 검색하여 알아냄.
+
+        너무 자주 실행하는 경우 서버에서 막아버리는 듯.
+
+        단독으로 사용되지는 않고, 아래 GetDetailEquipmentUrl 에서 내부적으로 선언하는 방식으로만 사용됨.
+
+        :param nickname: want to search (str)
+        """
         self.nickname = nickname
         url = GetCharacterDetailUrl.RANKING_URL + "?c=" + nickname + "&w=0"
         response = requests.get(url)
@@ -38,6 +50,11 @@ class GetDetailEquipmentUrl:
     RANKING_URL = MAIN_URL + "/Ranking/World/Total"
 
     def __init__(self, nickname: str):
+        """
+        해당 nickname 의 장비 정보 page 의 url 을 get.
+
+        :param nickname: want to search (str)
+        """
         self.nickname = nickname
         detail_url = GetCharacterDetailUrl(nickname).detail_url
         response = requests.get(detail_url)
