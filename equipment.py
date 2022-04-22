@@ -30,6 +30,7 @@ class EquipmentInformation:
             pattern = re.compile(r".+(?=\s\(\+\d+\))")
             equip_name = pattern.search(self._parsed_tag.title).group()
         self._type_checker(equip_name, str)
+        equip_name = re.sub(' +', ' ', equip_name)
         return equip_name
 
     def _set_scroll(self) -> int:
@@ -274,3 +275,117 @@ class TrimmedInformation(EquipmentInformation):
         print("superi", self.superior)
         print("amazin", self.amazing)
         print("hammer", self.hammer)
+
+
+class SummaryInformation:
+    def __init__(self, equipment_information: TrimmedInformation):
+        self._equipment_information = equipment_information
+        self._name = self._set_name()
+        self._category = self._set_category()
+        self._str = self._set_str()
+        self._dex = self._set_dex()
+        self._int = self._set_int()
+        self._luk = self._set_luk()
+        self._maxhp = self._set_maxhp()
+        self._allstat = self._set_allstat()
+        self._attack = self._set_attack_power()
+        self._magic_attack = self._set_magic_attack()
+        self._critical_damage = self._set_critical_damage()
+        self._boss_damage = self._set_boss_damage()
+        self._damage = self._set_damage()
+        self._ignore_def = self._set_ignore_def()
+        self._critical_rate = self._set_critical_rate()
+
+    def _set_name(self):
+        return self._equipment_information.name
+
+    def _set_category(self):
+        return self._equipment_information.category
+
+    def _search_and_append_stats(self, stat_keyword: str) -> str:
+        try:
+            basic = self._equipment_information.stat_options[stat_keyword]
+        except KeyError:
+            basic = ""
+        try:
+            potential = self._equipment_information.potential_options[stat_keyword]
+        except KeyError:
+            potential = ""
+        try:
+            additional = self._equipment_information.additional_options[stat_keyword]
+        except KeyError:
+            additional = ""
+        return basic + potential + additional
+
+    def _set_str(self):
+        aggregated = self._search_and_append_stats('STR')
+        return aggregated
+
+    def _set_dex(self):
+        aggregated = self._search_and_append_stats('DEX')
+        return aggregated
+
+    def _set_int(self):
+        aggregated = self._search_and_append_stats('INT')
+        return aggregated
+
+    def _set_luk(self):
+        aggregated = self._search_and_append_stats('LUK')
+        return aggregated
+
+    def _set_maxhp(self):
+        # alias 확인 완료
+        agg1 = self._search_and_append_stats('MaxHP')
+        agg2 = self._search_and_append_stats('최대 HP')
+        aggregated = agg1 + agg2
+        return aggregated
+
+    def _set_allstat(self):
+        aggregated = self._search_and_append_stats('올스탯')
+        return aggregated
+
+    def _set_attack_power(self):
+        aggregated = self._search_and_append_stats('공격력')
+        return aggregated
+
+    def _set_magic_attack(self):
+        aggregated = self._search_and_append_stats('마력')
+        return aggregated
+
+    def _set_critical_damage(self):
+        aggregated = self._search_and_append_stats('크리티컬 데미지')
+        return aggregated
+
+    def _set_boss_damage(self):
+        agg1 = self._search_and_append_stats('보스 몬스터공격 시 데미지')
+        agg2 = self._search_and_append_stats('보스 몬스터 공격 시 데미지')
+        aggregated = agg1 + agg2
+        return aggregated
+
+    def _set_damage(self):
+        aggregated = self._search_and_append_stats('데미지')
+        return aggregated
+
+    def _set_ignore_def(self):
+        agg1 = self._search_and_append_stats('몬스터 방어율 무시')
+        agg2 = self._search_and_append_stats('몬스터 방어력 무시')
+        aggregated = agg1 + agg2
+        return aggregated
+
+    def _set_critical_rate(self):
+        aggregated = self._search_and_append_stats('크리티컬 확률')
+        return aggregated
+
+    def print_all_attribute(self):
+        for attr, value in self.__dict__.items():
+            print(f"{attr:>16} :", value)
+        print()
+
+
+if __name__ == "__main__":
+    import scouter
+
+    my_equipments = scouter.ItemScouter("히슈와", True, True)
+    belt = my_equipments.equipments_info_dict['무기']
+    belt_summary = SummaryInformation(belt)
+    belt_summary.print_all_attribute()
