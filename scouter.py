@@ -58,7 +58,7 @@ class ItemScouter:
             print()
 
         # 점검 중 여부 확인
-        parsetag.is_maintenance_in_progress(equipment_url)
+        parsetag.is_available(equipment_url)
         if progress_notification:
             print("<<< Check maintenance : Done >>>")
             print()

@@ -13,9 +13,10 @@ EQUIPMENT_INDEX = {'반지1': 1, '모자': 3, '엠블렘': 5,
                    '신발': 28, '안드로이드': 29, '기계심장': 30}
 
 
-def is_maintenance_in_progress(url):
+def is_available(url):
     """
     홈페이지가 점검 중인지, 그래서 크롤링이 가능한지, 불가능하다면 raise RuntimeError
+    해당 캐릭터 정보가 공개되었는지, 그래서 크롤링이 가능한지, 불가능하다면 raise RuntimeError
 
     :param url: url of equipment detail page (str)
     :return: None
@@ -25,7 +26,9 @@ def is_maintenance_in_progress(url):
     maintenance = soup.select_one("#container [alt='메이플스토리 게임 점검 중에는 이용하실 수 없습니다.']") is not None
     if maintenance:
         raise RuntimeError("메이플스토리 게임 점검 중")
-
+    closed = soup.select_one("#container [alt='공개하지 않은 정보입니다.']") is not None
+    if closed:
+        raise RuntimeError("공개하지 않은 정보입니다.")
 
 class BrowserForEquipmentTag:
     """
