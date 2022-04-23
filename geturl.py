@@ -36,7 +36,7 @@ class GetCharacterDetailUrl:
                 url_suffix = tag['href']
                 break
         if url_suffix == "":
-            raise RuntimeError("Cannot find the Ranking search result. Wrong nickname OR changed html.")
+            raise RuntimeError("랭킹 검색 결과 존재하지 않음. 닉네임을 확인하세요.")
         return GetCharacterDetailUrl.MAIN_URL + url_suffix
 
     @property
