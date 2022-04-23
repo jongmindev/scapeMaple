@@ -337,22 +337,8 @@ class TrimmedInformation(EquipmentInformation):
         return self._additional_options
 
     def print_all_attribute(self):
-        print("name__", self.name)
-        print("scroll", self.scroll)
-        print("cate__", self.category)
-        # print("stat__", self.stats_dict)
-        print("t_stat", self.stat_options)
-        # print("poten_", self.potential)
-        print("potier", self.potential_tier)
-        print("pot_op", self.potential_options)
-        # print("addi__", self.additional)
-        print("adtier", self.additional_tier)
-        print("add_op", self.additional_options)
-        print("star_m", self.starforce_max)
-        print("star_n", self.starforce_now)
-        print("superi", self.superior)
-        print("amazin", self.amazing)
-        print("hammer", self.hammer)
+        for attr, value in self.__dict__.items():
+            print(f"{attr:>19} :", value)
 
 
 class SummaryInformation:

@@ -91,6 +91,8 @@ class BrowserForEquipmentTag:
         :return: None
         """
         self._browser.quit()
+        print("Browser quit!")
+        print()
 
 
 class ParseInfoTag:
