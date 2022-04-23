@@ -4,6 +4,7 @@ import equipment
 from parsetag import EQUIPMENT_INDEX
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 
 class ItemScouter:
@@ -99,6 +100,17 @@ class ItemScouter:
             print()
         return summary_info_dict
 
+    def print_all(self, option_summary: bool = True):
+        if option_summary:
+            dictionary = self._summary_info_dict
+        else:
+            dictionary = self._equipments_info_dict
+
+        for category, information in dictionary.items():
+            print(f"<<<<< {category} >>>>>")
+            information.print_all_attribute()
+            print()
+
     @property
     def equipments_info_dict(self):
         return self._equipments_info_dict
@@ -108,14 +120,74 @@ class ItemScouter:
         return self._summary_info_dict
 
 
+class PandasScouter(ItemScouter):
+    def __init__(self, nickname: str, background: bool = False, progress_notification: bool = False):
+        """
+        ItemScouter 클래스를 상속받아 기능추가.
+
+        모든 아이템 정보를 하나의 pandas dataframe 으로 저장.
+
+        :param nickname: want to search (str)
+        :param background: selenium browser background run or not option (bool)
+        :param progress_notification: print progress option (bool)
+        """
+        super().__init__(nickname, background, progress_notification)
+        self._summary_info_pandas = self._convert_summary_info_dict_to_df()
+        self._total_stat = self._summary_info_pandas.iloc[:-1, 2:].sum(axis=0)
+
+    @staticmethod
+    def _summary_info_to_dict(summary_info: equipment.SummaryInformation):
+        """
+        pandas DataFrame 의 각 row 가 되도록 dictaionary 로 변환.
+
+        단독으로 쓰이지 않고 아래 _convert_summary_info_dict_to_df() 안에서 호출.
+
+        :param summary_info: summarized information of the target equipment (equipment.SummaryInformation)
+        :return: dictionarized information (dict)
+        """
+        dictionary = {}
+        for attr, value in summary_info.__dict__.items():
+            if type(value) == str:
+                dictionary[attr[1:].upper()] = value
+            elif type(value) == tuple:
+                dictionary[attr[1:].upper()] = value[0]
+                dictionary[attr[1:].upper()+'(%)'] = value[1]
+            else:
+                pass
+        return dictionary
+
+    def _convert_summary_info_dict_to_df(self):
+        """
+        아이템 정보를 하나의 pandas DataFrame 으로 저장.
+
+        마지막 row 는 모든 아이템 option 수치의 합.
+
+        :return: information DataFrame (pandas.DataFrame)
+        """
+        df = pd.DataFrame()
+        for category, summary_info in super().summary_info_dict.items():
+            index = parsetag.EQUIPMENT_INDEX[category]
+            data = self._summary_info_to_dict(summary_info)
+            new_df = pd.DataFrame(data=data, index=[index])
+            df = pd.concat([df, new_df])
+
+        # 합계 row 추가
+        total_row = df.iloc[:, 2:].sum(axis=0)
+        df.loc['Total'] = total_row
+        return df
+
+    def print_infomation(self):
+        import tabulate
+        print(tabulate.tabulate(self.summary_info_pandas, headers='keys', tablefmt='presto'))
+
+    @property
+    def summary_info_pandas(self):
+        return self._summary_info_pandas
+
+    @property
+    def total_stat(self):
+        return self._total_stat
+
+
 if __name__ == "__main__":
-    my_equipments = ItemScouter("히슈와", background=False, progress_notification=True)
-    # for key, value in my_equipments.equipments_info_dict.items():
-    #     print("<<< " + key + " >>>")
-    #     value.print_all_attribute()
-    #     print()
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    for key, value in my_equipments.summary_info_dict.items():
-        print("<<< " + key + " >>>")
-        value.print_all_attribute()
-        print()
+    pass
