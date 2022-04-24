@@ -29,7 +29,7 @@ class GetCharacterDetailUrl:
 
     def _find_detail_url(self) -> str:
         result_set = self._soup.select("#container div.rank_table_wrap > table.rank_table "
-                                      "> tbody > tr > td.left > dl > dt > a")
+                                       "> tbody > tr > td.left > dl > dt > a")
         url_suffix = ""
         for tag in result_set:
             if tag.get_text() == self.nickname:
@@ -65,8 +65,8 @@ class GetDetailEquipmentUrl:
         target_tag = self._soup.find("a", string=re.compile(r"장비"))
         url_suffix = target_tag['href']
         # url suffix 를 제대로 찾았는지 유효성 검사
-        pattern = re.compile(r"/Common/Character/Detail/.+/Equipment\?p\=.+")
-        if type(pattern.match(url_suffix)) == type(None):
+        pattern = re.compile(r"/Common/Character/Detail/.+/Equipment\?p.+")
+        if pattern.match(url_suffix) is None:
             raise RuntimeError("Cannot find the Equipment/.../Equipment url suffix. Changed html.")
         return GetDetailEquipmentUrl.MAIN_URL + url_suffix
 

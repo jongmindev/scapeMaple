@@ -30,6 +30,7 @@ def is_available(url):
     if closed:
         raise RuntimeError("공개하지 않은 정보입니다.")
 
+
 class BrowserForEquipmentTag:
     """
     equipment detail page 에서 특정 장비의 item pot 을 클릭하여 html 를 바꾼 후,

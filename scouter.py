@@ -138,7 +138,7 @@ class PandasScouter(ItemScouter):
     @staticmethod
     def _summary_info_to_dict(summary_info: equipment.SummaryInformation):
         """
-        pandas DataFrame 의 각 row 가 되도록 dictaionary 로 변환.
+        pandas DataFrame 의 각 row 가 되도록 dictionary 로 변환.
 
         단독으로 쓰이지 않고 아래 _convert_summary_info_dict_to_df() 안에서 호출.
 
@@ -176,7 +176,7 @@ class PandasScouter(ItemScouter):
         df.loc['Total'] = total_row
         return df
 
-    def print_infomation(self):
+    def tabulate_information(self):
         import tabulate
         print(tabulate.tabulate(self.summary_info_pandas, headers='keys', tablefmt='presto'))
 
