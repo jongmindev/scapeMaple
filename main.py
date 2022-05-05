@@ -7,9 +7,9 @@ pandas_scouter = scouter.PandasScouter(nickname=NICKNAME, background=True, progr
 pandas_scouter.tabulate_information()
 
 # 정보공개 되어있지 않은 경우
-NICKNAME = "오지환"
-pandas_scouter = scouter.PandasScouter(nickname=NICKNAME, background=True, progress_notification=True)
-pandas_scouter.tabulate_information()
+# NICKNAME = "오지환"
+# pandas_scouter = scouter.PandasScouter(nickname=NICKNAME, background=True, progress_notification=True)
+# pandas_scouter.tabulate_information()
 
 # 존재하지 않거나 랭킹에 노출되지 않는 캐릭터인 경우
 # NICKNAME = "!@#$%^&*()"

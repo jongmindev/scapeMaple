@@ -134,6 +134,7 @@ class PandasScouter(ItemScouter):
         super().__init__(nickname, background, progress_notification)
         self._summary_info_pandas = self._convert_summary_info_dict_to_df()
         self._total_stat = self._summary_info_pandas.iloc[:-1, 2:].sum(axis=0)
+        self._summary_info_without_zero_columns = self._drop_zero_column(self._summary_info_pandas)
 
     @staticmethod
     def _summary_info_to_dict(summary_info: equipment.SummaryInformation):
@@ -176,9 +177,19 @@ class PandasScouter(ItemScouter):
         df.loc['Total'] = total_row
         return df
 
+    @staticmethod
+    def _drop_zero_column(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        전달받은 DataFrame 에서 all zero column 이 있다면 그것을 삭제한 DataFrame 을 반환
+
+        :param df: pandas DataFrame which may or may not contain zero columns
+        :return: pandas DataFrame which has no zero columns
+        """
+        return df.loc[:, (df != 0).any(axis=0)]
+
     def tabulate_information(self):
         import tabulate
-        print(tabulate.tabulate(self.summary_info_pandas, headers='keys', tablefmt='presto'))
+        print(tabulate.tabulate(self.summary_info_without_zero_columns, headers='keys', tablefmt='presto'))
 
     @property
     def summary_info_pandas(self):
@@ -187,6 +198,10 @@ class PandasScouter(ItemScouter):
     @property
     def total_stat(self):
         return self._total_stat
+
+    @property
+    def summary_info_without_zero_columns(self):
+        return self._summary_info_without_zero_columns
 
 
 if __name__ == "__main__":
